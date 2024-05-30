@@ -1,15 +1,12 @@
 package com.devsuperior.dslearn.entities;
 
-import com.devsuperior.dslearn.entities.enums.ResourceType;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_resource")
-public class Resource {
+@Table(name = "tb_section")
+public class Section {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,26 +15,26 @@ public class Resource {
     private String description;
     private int position;
     private String imgUri;
-    private ResourceType type;
 
     @ManyToOne
-    @JoinColumn(name = "offer_id")
-    private Offer offer;
+    @JoinColumn(name = "resource_id")
+    private Resource resource;
 
-    @OneToMany(mappedBy = "resource")
-    List<Section> sections = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "prerequisite_id")
+    private Section sections;
 
-    public Resource() {
+    public Section() {
     }
 
-    public Resource(Long id, String title, String description, int position, String imgUri, ResourceType type, Offer offer) {
+    public Section(Long id, String title, String description, int position, String imgUri, Resource resource, Section sections) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.position = position;
         this.imgUri = imgUri;
-        this.type = type;
-        this.offer = offer;
+        this.resource = resource;
+        this.sections = sections;
     }
 
     public Long getId() {
@@ -80,20 +77,20 @@ public class Resource {
         this.imgUri = imgUri;
     }
 
-    public ResourceType getType() {
-        return type;
+    public Resource getResource() {
+        return resource;
     }
 
-    public void setType(ResourceType type) {
-        this.type = type;
+    public void setResource(Resource resource) {
+        this.resource = resource;
     }
 
-    public Offer getOffer() {
-        return offer;
-    }
-
-    public List<Section> getSections() {
+    public Section getSections() {
         return sections;
+    }
+
+    public void setSections(Section sections) {
+        this.sections = sections;
     }
 
     @Override
@@ -101,8 +98,8 @@ public class Resource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Resource resource = (Resource) o;
-        return Objects.equals(id, resource.id);
+        Section section = (Section) o;
+        return Objects.equals(id, section.id);
     }
 
     @Override
